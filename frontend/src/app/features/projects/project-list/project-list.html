@@ -15,10 +15,13 @@
     </p>
   </div>
 
-  <button class="new-project-btn">
+  <a
+    routerLink="/projects/new"
+    class="new-project-btn"
+  >
     <span>+</span>
     Nuevo proyecto
-  </button>
+  </a>
 
 </section>
 
@@ -43,7 +46,8 @@
 
     <select
       [(ngModel)]="selectedClient"
-      (change)="loadProjects()">
+      (change)="loadProjects()"
+    >
 
       <option value="">
         Todos los clientes
@@ -65,7 +69,8 @@
 
     <select
       [(ngModel)]="selectedStatus"
-      (change)="loadProjects()">
+      (change)="loadProjects()"
+    >
 
       <option value="">
         Todos los estados
@@ -92,7 +97,8 @@
 
     <select
       [(ngModel)]="selectedPriority"
-      (change)="loadProjects()">
+      (change)="loadProjects()"
+    >
 
       <option value="">
         Todas las prioridades
@@ -114,11 +120,11 @@
 
 
     <button
+      type="button"
       class="clear-btn"
-      (click)="clearFilters()">
-
+      (click)="clearFilters()"
+    >
       Limpiar filtros
-
     </button>
 
   </div>
@@ -153,14 +159,15 @@
 
     <article
       class="project-card"
-      [class.overdue]="project.is_overdue">
+      [class.overdue]="project.is_overdue"
+    >
 
       <div class="project-top">
 
         <div>
 
           <span class="client-name">
-            {{ project.client_name }}
+            {{ clientDisplay(project) }}
           </span>
 
           <h2>
@@ -173,10 +180,9 @@
           class="priority"
           [class.high]="project.priority === 'high'"
           [class.medium]="project.priority === 'medium'"
-          [class.low]="project.priority === 'low'">
-
+          [class.low]="project.priority === 'low'"
+        >
           {{ priorityLabel(project.priority) }}
-
         </span>
 
       </div>
@@ -204,7 +210,8 @@
 
         <div
           class="progress-value"
-          [style.width.%]="project.calculated_progress">
+          [style.width.%]="project.calculated_progress"
+        >
         </div>
 
       </div>
@@ -222,10 +229,9 @@
             class="status"
             [class.late]="project.current_status === 'late'"
             [class.completed]="project.current_status === 'completed'"
-            [class.pending]="project.current_status === 'pending'">
-
+            [class.pending]="project.current_status === 'pending'"
+          >
             {{ statusLabel(project.current_status) }}
-
           </span>
 
         </div>
@@ -248,13 +254,26 @@
 
       <div class="project-actions">
 
-        <button class="secondary-btn">
+        <a
+          [routerLink]="[
+            '/projects',
+            project.id,
+            'edit'
+          ]"
+          class="secondary-btn"
+        >
           Editar
-        </button>
+        </a>
 
-        <button class="detail-btn">
+        <a
+          [routerLink]="[
+            '/projects',
+            project.id
+          ]"
+          class="detail-btn"
+        >
           Ver detalle →
-        </button>
+        </a>
 
       </div>
 
@@ -278,6 +297,13 @@
           Prueba cambiando los filtros o crea
           un nuevo proyecto.
         </p>
+
+        <a
+          routerLink="/projects/new"
+          class="empty-create-btn"
+        >
+          + Crear proyecto
+        </a>
 
       </div>
 

@@ -1,1 +1,274 @@
-<p>project-detail works!</p>
+<div class="detail-page">
+
+  <!-- CARGANDO -->
+  <div class="state-card" *ngIf="loading()">
+    <div class="loader"></div>
+    <h3>Cargando proyecto...</h3>
+    <p>Estamos obteniendo la información desde FreeWorks.</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state-card error-state" *ngIf="!loading() && error()">
+    <div class="state-icon">!</div>
+
+    <h2>No pudimos cargar el proyecto</h2>
+
+    <p>{{ error() }}</p>
+
+    <button class="btn-secondary" (click)="goBack()">
+      ← Volver a proyectos
+    </button>
+  </div>
+
+  <!-- PROYECTO -->
+  <ng-container  *ngIf="!loading() && !error() && project() as project">
+
+    <!-- CABECERA -->
+    <div class="detail-header">
+
+      <div>
+        <button class="back-button" (click)="goBack()">
+          ← Volver a proyectos
+        </button>
+
+        <span class="eyebrow">
+          DETALLE DEL PROYECTO
+        </span>
+
+        <h1>{{ project.name }}</h1>
+
+        <p class="description">
+          {{ project.description || 'Este proyecto no posee una descripción.' }}
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <span
+          class="status-badge"
+          [ngClass]="project.current_status"
+        >
+          {{ getStatusLabel(project.current_status) }}
+        </span>
+
+        <button
+          class="btn-primary"
+          (click)="editProject()"
+        >
+          ✎ Editar proyecto
+        </button>
+      </div>
+
+    </div>
+
+    <!-- INFORMACIÓN GENERAL -->
+    <section class="info-grid">
+
+      <article class="info-card">
+        <span class="info-label">CLIENTE</span>
+        <strong>{{ project.client_name || 'Sin cliente' }}</strong>
+        <small>Cliente asociado al proyecto</small>
+      </article>
+
+      <article class="info-card">
+        <span class="info-label">PRIORIDAD</span>
+
+        <strong
+          class="priority"
+          [ngClass]="project.priority"
+        >
+          {{ getPriorityLabel(project.priority) }}
+        </strong>
+
+        <small>Nivel de prioridad actual</small>
+      </article>
+
+      <article class="info-card">
+        <span class="info-label">FECHA DE INICIO</span>
+        <strong>
+          {{ project.start_date | date:'dd/MM/yyyy' }}
+        </strong>
+        <small>Inicio planificado</small>
+      </article>
+
+      <article class="info-card">
+        <span class="info-label">FECHA LÍMITE</span>
+        <strong>
+          {{ project.deadline | date:'dd/MM/yyyy' }}
+        </strong>
+        <small>Fecha comprometida de entrega</small>
+      </article>
+
+    </section>
+
+    <!-- PROGRESO -->
+    <section class="content-card progress-section">
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">RENDIMIENTO</span>
+          <h2>Progreso del proyecto</h2>
+        </div>
+
+        <strong class="progress-number">
+          {{ getProgress() }}%
+        </strong>
+      </div>
+
+      <div class="progress-track">
+        <div
+          class="progress-fill"
+          [style.width.%]="getProgress()"
+        ></div>
+      </div>
+
+      <div class="progress-footer">
+        <span>Inicio</span>
+        <span>Objetivo: 100%</span>
+      </div>
+
+    </section>
+
+    <!-- CONTENIDO INFERIOR -->
+    <div class="detail-columns">
+
+      <!-- ENTREGABLES -->
+      <section class="content-card">
+
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ENTREGABLES</span>
+            <h2>Avances y entregas</h2>
+          </div>
+
+          <button class="small-primary">
+            + Agregar
+          </button>
+        </div>
+
+        <div
+          class="empty-state"
+          *ngIf="!project.deliverables?.length"
+        >
+          <div class="empty-icon">✓</div>
+
+          <h3>Aún no hay entregables</h3>
+
+          <p>
+            Registra los avances del proyecto para calcular
+            automáticamente su progreso.
+          </p>
+        </div>
+
+        <div
+          class="deliverable"
+          *ngFor="let deliverable of project.deliverables"
+        >
+          <div class="deliverable-icon">
+            ✓
+          </div>
+
+          <div class="deliverable-content">
+           <strong>
+  {{ deliverable.name }}
+</strong>
+
+<p class="deliverable-description">
+  {{ deliverable.description }}
+</p>
+
+            <span>
+              {{ deliverable.delivery_date | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
+<span
+  class="delivery-status"
+  [class.done]="deliverable.status === 'delivered'"
+>
+  {{
+    deliverable.status === 'delivered'
+      ? 'Entregado'
+      : 'Pendiente'
+  }}
+</span>
+          
+        </div>
+
+      </section>
+
+      <!-- COMENTARIOS -->
+      <section class="content-card">
+
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">COMENTARIOS</span>
+            <h2>Comentarios del cliente</h2>
+          </div>
+
+          <span class="counter">
+            {{ project.comments?.length || 0 }}
+          </span>
+        </div>
+
+        <div
+          class="empty-state"
+          *ngIf="!project.comments?.length"
+        >
+          <div class="empty-icon comment-icon">
+            “
+          </div>
+
+          <h3>Sin comentarios todavía</h3>
+
+          <p>
+            Los comentarios registrados por el cliente
+            aparecerán en esta sección.
+          </p>
+        </div>
+
+        <article
+          class="comment"
+          *ngFor="let comment of project.comments"
+        >
+          <div class="comment-avatar">
+            {{ project.client_name?.charAt(0) || 'C' }}
+          </div>
+
+          <div>
+            <strong>
+              {{ project.client_name }}
+            </strong>
+
+            <p>
+               {{ comment.message }}
+            </p>
+
+            <small *ngIf="comment.created_at">
+              {{ comment.created_at | date:'dd/MM/yyyy HH:mm' }}
+            </small>
+          </div>
+        </article>
+
+      </section>
+
+    </div>
+
+    <!-- AVISO DE ATRASO -->
+    <section
+      class="overdue-alert"
+      *ngIf="project.is_overdue"
+    >
+      <div class="alert-symbol">!</div>
+
+      <div>
+        <strong>Este proyecto requiere atención</strong>
+
+        <p>
+          La fecha límite fue superada y existen actividades
+          pendientes por completar.
+        </p>
+      </div>
+    </section>
+
+  </ng-container>
+
+</div>

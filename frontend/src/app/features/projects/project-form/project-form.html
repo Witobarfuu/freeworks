@@ -1,1 +1,453 @@
-<p>project-form works!</p>
+<section class="page-header">
+
+  <div>
+
+    <a
+      routerLink="/projects"
+      class="back-link"
+    >
+      ← Volver a proyectos
+    </a>
+
+    <span class="eyebrow">
+
+      {{
+        isEditMode
+          ? 'EDITAR PROYECTO'
+          : 'NUEVO PROYECTO'
+      }}
+
+    </span>
+
+    <h1>
+
+      {{
+        isEditMode
+          ? 'Actualiza tu proyecto'
+          : 'Crea un nuevo proyecto'
+      }}
+
+    </h1>
+
+    <p>
+      Define cliente, fechas, prioridad,
+      estado y avance del proyecto.
+    </p>
+
+  </div>
+
+</section>
+
+
+@if (errorMessage()) {
+
+  <div class="message error-message">
+
+    <strong>
+      Revisa la información
+    </strong>
+
+    <span>
+      {{ errorMessage() }}
+    </span>
+
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <div class="loading-state">
+
+    <div class="spinner"></div>
+
+    <span>
+      Cargando proyecto...
+    </span>
+
+  </div>
+
+}
+
+
+@if (!loading()) {
+
+  <form
+    class="project-form"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+
+    <section class="form-card">
+
+      <div class="card-heading">
+
+        <span class="step">
+          01
+        </span>
+
+        <div>
+
+          <h2>
+            Información general
+          </h2>
+
+          <p>
+            Datos principales del proyecto.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field full">
+
+          <label for="name">
+            Nombre del proyecto *
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Ej: Plataforma E-commerce"
+            [class.invalid]="fieldInvalid('name')"
+          >
+
+          @if (
+            fieldInvalid('name')
+          ) {
+
+            <small class="field-error">
+              Ingresa un nombre de al menos
+              3 caracteres.
+            </small>
+
+          }
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="client">
+            Cliente *
+          </label>
+
+          <select
+            id="client"
+            formControlName="client"
+            [class.invalid]="fieldInvalid('client')"
+          >
+
+            <option value="">
+              Seleccionar cliente
+            </option>
+
+            @for (
+              client of clients();
+              track client.id
+            ) {
+
+              <option
+                [value]="client.id"
+              >
+
+                {{
+                  client.company
+                    ? client.company + ' · ' + client.name
+                    : client.name
+                }}
+
+              </option>
+
+            }
+
+          </select>
+
+          @if (
+            fieldInvalid('client')
+          ) {
+
+            <small class="field-error">
+              Selecciona un cliente.
+            </small>
+
+          }
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="priority">
+            Prioridad *
+          </label>
+
+          <select
+            id="priority"
+            formControlName="priority"
+          >
+
+            <option value="low">
+              Baja
+            </option>
+
+            <option value="medium">
+              Media
+            </option>
+
+            <option value="high">
+              Alta
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field full">
+
+          <label for="description">
+            Descripción *
+          </label>
+
+          <textarea
+            id="description"
+            rows="5"
+            formControlName="description"
+            placeholder="Describe brevemente el objetivo y alcance del proyecto..."
+            [class.invalid]="fieldInvalid('description')"
+          ></textarea>
+
+          @if (
+            fieldInvalid('description')
+          ) {
+
+            <small class="field-error">
+              La descripción debe contener al
+              menos 10 caracteres.
+            </small>
+
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="form-card">
+
+      <div class="card-heading">
+
+        <span class="step">
+          02
+        </span>
+
+        <div>
+
+          <h2>
+            Planificación y avance
+          </h2>
+
+          <p>
+            Fechas, estado y progreso manual.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label for="start_date">
+            Fecha de inicio *
+          </label>
+
+          <input
+            id="start_date"
+            type="date"
+            formControlName="start_date"
+            [class.invalid]="fieldInvalid('start_date')"
+          >
+
+          @if (
+            fieldInvalid('start_date')
+          ) {
+
+            <small class="field-error">
+              La fecha de inicio es obligatoria.
+            </small>
+
+          }
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="deadline">
+            Fecha límite *
+          </label>
+
+          <input
+            id="deadline"
+            type="date"
+            formControlName="deadline"
+            [class.invalid]="fieldInvalid('deadline')"
+          >
+
+          @if (
+            fieldInvalid('deadline')
+          ) {
+
+            <small class="field-error">
+              La fecha límite es obligatoria.
+            </small>
+
+          }
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="status">
+            Estado *
+          </label>
+
+          <select
+            id="status"
+            formControlName="status"
+          >
+
+            <option value="pending">
+              Pendiente
+            </option>
+
+            <option value="progress">
+              En progreso
+            </option>
+
+            <option value="completed">
+              Finalizado
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="manual_progress">
+            Avance manual
+          </label>
+
+          <div class="progress-input">
+
+            <input
+              id="manual_progress"
+              type="number"
+              min="0"
+              max="100"
+              formControlName="manual_progress"
+              [class.invalid]="fieldInvalid('manual_progress')"
+            >
+
+            <span>
+              %
+            </span>
+
+          </div>
+
+          @if (
+            fieldInvalid(
+              'manual_progress'
+            )
+          ) {
+
+            <small class="field-error">
+              El avance debe estar entre
+              0 y 100.
+            </small>
+
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="info-card">
+
+      <div class="info-icon">
+        i
+      </div>
+
+      <div>
+
+        <strong>
+          ¿Cómo funciona el progreso?
+        </strong>
+
+        <p>
+          El avance manual se utiliza mientras
+          el proyecto no tenga entregables.
+          Cuando existan entregables, FreeWorks
+          calcula automáticamente el porcentaje
+          según los elementos entregados.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <div class="form-actions">
+
+      <a
+        routerLink="/projects"
+        class="cancel-btn"
+      >
+        Cancelar
+      </a>
+
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="saving()"
+      >
+
+        @if (saving()) {
+
+          Guardando...
+
+        } @else {
+
+          {{
+            isEditMode
+              ? 'Guardar cambios'
+              : 'Crear proyecto'
+          }}
+
+        }
+
+      </button>
+
+    </div>
+
+  </form>
+
+}

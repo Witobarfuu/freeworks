@@ -5,7 +5,13 @@ import {
   signal
 } from '@angular/core';
 
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule
+} from '@angular/forms';
+
+import {
+  RouterLink
+} from '@angular/router';
 
 import {
   Client,
@@ -14,110 +20,240 @@ import {
   ProjectResponse
 } from '../../../core/services/freeworks-api';
 
+
 @Component({
   selector: 'app-project-list',
+
   imports: [
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
+
   templateUrl: './project-list.html',
   styleUrl: './project-list.css'
 })
 export class ProjectList implements OnInit {
 
-  private readonly api = inject(FreeworksApi);
+  private readonly api =
+    inject(FreeworksApi);
 
-  projects = signal<Project[]>([]);
-  clients = signal<Client[]>([]);
 
-  loading = signal(true);
-  error = signal(false);
+  projects =
+    signal<Project[]>([]);
+
+  clients =
+    signal<Client[]>([]);
+
+  loading =
+    signal(true);
+
+  error =
+    signal(false);
+
 
   search = '';
+
   selectedClient = '';
+
   selectedStatus = '';
+
   selectedPriority = '';
 
+
   ngOnInit(): void {
+
     this.loadClients();
+
     this.loadProjects();
+
   }
 
+
   loadClients(): void {
+
     this.api.getClients().subscribe({
+
       next: (data) => {
+
         this.clients.set(data);
+
       },
-      error: () => {
+
+      error: (error) => {
+
+        console.error(
+          'ERROR CLIENTES:',
+          error
+        );
+
         this.error.set(true);
+
       }
+
     });
+
   }
+
 
   loadProjects(): void {
 
     this.loading.set(true);
 
+    this.error.set(false);
+
+
     this.api.getProjectsFiltered({
-      search: this.search,
-      client: this.selectedClient,
-      status: this.selectedStatus,
-      priority: this.selectedPriority
+
+      search:
+        this.search.trim(),
+
+      client:
+        this.selectedClient,
+
+      status:
+        this.selectedStatus,
+
+      priority:
+        this.selectedPriority
+
     }).subscribe({
 
       next: (
-        data: Project[] | ProjectResponse
+        data:
+          Project[]
+          | ProjectResponse
       ) => {
 
-        if (Array.isArray(data)) {
-          this.projects.set(data);
+        if (
+          Array.isArray(data)
+        ) {
+
+          this.projects.set(
+            data
+          );
+
         } else {
+
           this.projects.set(
             data.results ?? []
           );
+
         }
 
+
         this.loading.set(false);
+
       },
 
       error: (error) => {
-        console.error(error);
+
+        console.error(
+          'ERROR PROYECTOS:',
+          error
+        );
+
+        this.projects.set([]);
 
         this.error.set(true);
+
         this.loading.set(false);
+
       }
 
     });
+
   }
+
 
   clearFilters(): void {
+
     this.search = '';
+
     this.selectedClient = '';
+
     this.selectedStatus = '';
+
     this.selectedPriority = '';
 
+
     this.loadProjects();
+
   }
 
-  statusLabel(status: string): string {
 
-    const labels: Record<string, string> = {
-      pending: 'Pendiente',
-      progress: 'En progreso',
-      completed: 'Finalizado',
-      late: 'Atrasado'
-    };
+  statusLabel(
+    status: string
+  ): string {
 
-    return labels[status] ?? status;
+    const labels:
+      Record<string, string> = {
+
+        pending:
+          'Pendiente',
+
+        progress:
+          'En progreso',
+
+        completed:
+          'Finalizado',
+
+        late:
+          'Atrasado'
+
+      };
+
+
+    return (
+      labels[status]
+      ?? status
+    );
+
   }
 
-  priorityLabel(priority: string): string {
 
-    const labels: Record<string, string> = {
-      low: 'Baja',
-      medium: 'Media',
-      high: 'Alta'
-    };
+  priorityLabel(
+    priority: string
+  ): string {
 
-    return labels[priority] ?? priority;
+    const labels:
+      Record<string, string> = {
+
+        low:
+          'Baja',
+
+        medium:
+          'Media',
+
+        high:
+          'Alta'
+
+      };
+
+
+    return (
+      labels[priority]
+      ?? priority
+    );
+
   }
+
+
+  clientDisplay(
+    project: Project
+  ): string {
+
+    if (
+      project.client_company
+      && project.client_company.trim()
+    ) {
+
+      return project.client_company;
+
+    }
+
+
+    return project.client_name;
+
+  }
+
 }
