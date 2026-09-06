@@ -1,0 +1,306 @@
+<section class="page-header">
+
+  <a
+    routerLink="/deliverables"
+    class="back-link"
+  >
+    ← Volver a entregables
+  </a>
+
+
+  <span class="eyebrow">
+
+    {{
+      isEditMode
+        ? 'EDITAR ENTREGABLE'
+        : 'NUEVO ENTREGABLE'
+    }}
+
+  </span>
+
+
+  <h1>
+
+    {{
+      isEditMode
+        ? 'Actualizar entregable'
+        : 'Registrar nueva entrega'
+    }}
+
+  </h1>
+
+
+  <p>
+    Vincula avances, fechas y archivos simulados
+    a tus proyectos.
+  </p>
+
+</section>
+
+
+@if (errorMessage()) {
+
+  <div class="error-message">
+
+    <strong>
+      Revisa la información
+    </strong>
+
+    <span>
+      {{ errorMessage() }}
+    </span>
+
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <div class="loading-state">
+    Cargando entregable...
+  </div>
+
+}
+
+
+@if (!loading()) {
+
+  <form
+    class="deliverable-form"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+
+    <section class="form-card">
+
+      <div class="card-heading">
+
+        <span class="step">
+          01
+        </span>
+
+        <div>
+
+          <h2>
+            Información de la entrega
+          </h2>
+
+          <p>
+            Define el proyecto y el contenido del entregable.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field full">
+
+          <label>
+            Proyecto *
+          </label>
+
+          <select
+            formControlName="project"
+            [class.invalid]="fieldInvalid('project')"
+          >
+
+            <option value="">
+              Seleccionar proyecto
+            </option>
+
+            @for (
+              project of projects();
+              track project.id
+            ) {
+
+              <option
+                [value]="project.id"
+              >
+                {{ project.name }}
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+        <div class="field full">
+
+          <label>
+            Nombre del entregable *
+          </label>
+
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Ej: API REST"
+            [class.invalid]="fieldInvalid('name')"
+          >
+
+        </div>
+
+
+        <div class="field full">
+
+          <label>
+            Descripción *
+          </label>
+
+          <textarea
+            rows="5"
+            formControlName="description"
+            placeholder="Describe el contenido o avance entregado..."
+            [class.invalid]="fieldInvalid('description')"
+          ></textarea>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="form-card">
+
+      <div class="card-heading">
+
+        <span class="step">
+          02
+        </span>
+
+        <div>
+
+          <h2>
+            Entrega y estado
+          </h2>
+
+          <p>
+            Fecha, archivo simulado y estado actual.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>
+            Fecha de entrega *
+          </label>
+
+          <input
+            type="date"
+            formControlName="delivery_date"
+            [class.invalid]="fieldInvalid('delivery_date')"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Estado *
+          </label>
+
+          <select
+            formControlName="status"
+          >
+
+            <option value="pending">
+              Pendiente
+            </option>
+
+            <option value="delivered">
+              Entregado
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field full">
+
+          <label>
+            Archivo simulado
+          </label>
+
+          <input
+            type="text"
+            formControlName="simulated_file"
+            placeholder="Ej: api_rest_v1.zip"
+          >
+
+          <small>
+            Para este MVP no es necesario subir un archivo real.
+          </small>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="info-card">
+
+      <strong>
+        Progreso automático
+      </strong>
+
+      <p>
+        Cuando cambies un entregable a
+        <b>Entregado</b>, FreeWorks recalculará
+        automáticamente el porcentaje de avance
+        del proyecto.
+      </p>
+
+    </div>
+
+
+    <div class="form-actions">
+
+      <a
+        routerLink="/deliverables"
+        class="cancel-btn"
+      >
+        Cancelar
+      </a>
+
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="saving()"
+      >
+
+        @if (saving()) {
+
+          Guardando...
+
+        } @else {
+
+          {{
+            isEditMode
+              ? 'Guardar cambios'
+              : 'Crear entregable'
+          }}
+
+        }
+
+      </button>
+
+    </div>
+
+  </form>
+
+}

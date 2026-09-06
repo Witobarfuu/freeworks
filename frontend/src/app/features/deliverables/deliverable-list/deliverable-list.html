@@ -1,0 +1,281 @@
+<section class="page-header">
+
+  <div>
+
+    <span class="eyebrow">
+      GESTIÓN DE ENTREGABLES
+    </span>
+
+    <h1>
+      Control de entregas
+    </h1>
+
+    <p>
+      Supervisa avances, fechas y archivos asociados
+      a cada proyecto.
+    </p>
+
+  </div>
+
+
+  <a
+    routerLink="/deliverables/new"
+    class="new-btn"
+  >
+    <span>+</span>
+    Nuevo entregable
+  </a>
+
+</section>
+
+
+<section class="filters-panel">
+
+  <div class="search-box">
+
+    <span>
+      ⌕
+    </span>
+
+    <input
+      type="text"
+      [(ngModel)]="search"
+      (input)="loadDeliverables()"
+      placeholder="Buscar entregable o proyecto..."
+    >
+
+  </div>
+
+
+  <div class="filter-grid">
+
+    <select
+      [(ngModel)]="selectedProject"
+      (change)="loadDeliverables()"
+    >
+
+      <option value="">
+        Todos los proyectos
+      </option>
+
+      @for (
+        project of projects();
+        track project.id
+      ) {
+
+        <option
+          [value]="project.id"
+        >
+          {{ project.name }}
+        </option>
+
+      }
+
+    </select>
+
+
+    <select
+      [(ngModel)]="selectedStatus"
+      (change)="loadDeliverables()"
+    >
+
+      <option value="">
+        Todos los estados
+      </option>
+
+      <option value="pending">
+        Pendiente
+      </option>
+
+      <option value="delivered">
+        Entregado
+      </option>
+
+    </select>
+
+
+    <button
+      type="button"
+      class="clear-btn"
+      (click)="clearFilters()"
+    >
+      Limpiar filtros
+    </button>
+
+  </div>
+
+</section>
+
+
+@if (error()) {
+
+  <div class="error-banner">
+
+    No fue posible cargar los entregables.
+
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <div class="loading-state">
+
+    <div class="spinner"></div>
+
+    <span>
+      Cargando entregables...
+    </span>
+
+  </div>
+
+}
+
+
+@if (!loading()) {
+
+  <section class="deliverables-grid">
+
+    @for (
+      deliverable of deliverables();
+      track deliverable.id
+    ) {
+
+      <article
+        class="deliverable-card"
+        [class.overdue]="deliverable.is_overdue"
+      >
+
+        <div class="card-top">
+
+          <div>
+
+            <span class="project-label">
+              {{ projectName(deliverable.project) }}
+            </span>
+
+            <h2>
+              {{ deliverable.name }}
+            </h2>
+
+          </div>
+
+
+          <span
+            class="status"
+            [class.delivered]="deliverable.status === 'delivered'"
+            [class.pending]="deliverable.status === 'pending'"
+          >
+
+            {{ statusLabel(deliverable.status) }}
+
+          </span>
+
+        </div>
+
+
+        <p class="description">
+
+          {{ deliverable.description }}
+
+        </p>
+
+
+        <div class="meta-grid">
+
+          <div>
+
+            <span>
+              Fecha de entrega
+            </span>
+
+            <strong>
+              {{ deliverable.delivery_date }}
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Archivo simulado
+            </span>
+
+            <strong>
+
+              {{
+                deliverable.simulated_file
+                || 'Sin archivo'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        @if (
+          deliverable.is_overdue
+        ) {
+
+          <div class="overdue-warning">
+
+            <strong>!</strong>
+
+            Entrega atrasada
+
+          </div>
+
+        }
+
+
+        <div class="actions">
+
+          <a
+            [routerLink]="[
+              '/deliverables',
+              deliverable.id,
+              'edit'
+            ]"
+            class="edit-btn"
+          >
+            Editar
+          </a>
+
+        </div>
+
+      </article>
+
+    } @empty {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ✓
+        </div>
+
+        <h3>
+          No encontramos entregables
+        </h3>
+
+        <p>
+          Crea un entregable o modifica los filtros.
+        </p>
+
+        <a
+          routerLink="/deliverables/new"
+          class="empty-btn"
+        >
+          + Crear entregable
+        </a>
+
+      </div>
+
+    }
+
+  </section>
+
+}

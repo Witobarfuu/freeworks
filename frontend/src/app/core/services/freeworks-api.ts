@@ -36,6 +36,16 @@ export interface Deliverable {
 }
 
 
+export interface DeliverablePayload {
+  project: number;
+  name: string;
+  description: string;
+  delivery_date: string;
+  simulated_file: string;
+  status: string;
+}
+
+
 export interface Comment {
   id: number;
   project: number;
@@ -121,19 +131,17 @@ export interface ProjectPayload {
 })
 export class FreeworksApi {
 
-  private readonly http =
-    inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
   private readonly apiUrl =
     'http://127.0.0.1:8000/api';
 
 
-  // ==========================================
+  // =========================
   // DASHBOARD
-  // ==========================================
+  // =========================
 
-  getDashboard():
-    Observable<DashboardSummary> {
+  getDashboard(): Observable<DashboardSummary> {
 
     return this.http.get<DashboardSummary>(
       `${this.apiUrl}/dashboard/`
@@ -142,12 +150,11 @@ export class FreeworksApi {
   }
 
 
-  // ==========================================
+  // =========================
   // CLIENTES
-  // ==========================================
+  // =========================
 
-  getClients():
-    Observable<Client[]> {
+  getClients(): Observable<Client[]> {
 
     return this.http.get<Client[]>(
       `${this.apiUrl}/clients/`
@@ -156,9 +163,9 @@ export class FreeworksApi {
   }
 
 
-  // ==========================================
+  // =========================
   // PROYECTOS
-  // ==========================================
+  // =========================
 
   getProjects():
     Observable<Project[] | ProjectResponse> {
@@ -179,50 +186,41 @@ export class FreeworksApi {
       status?: string;
       priority?: string;
     }
-  ):
-    Observable<Project[] | ProjectResponse> {
+  ): Observable<Project[] | ProjectResponse> {
 
     const query =
       new URLSearchParams();
 
 
     if (params.search) {
-
       query.set(
         'search',
         params.search
       );
-
     }
 
 
     if (params.client) {
-
       query.set(
         'client',
         params.client
       );
-
     }
 
 
     if (params.status) {
-
       query.set(
         'status',
         params.status
       );
-
     }
 
 
     if (params.priority) {
-
       query.set(
         'priority',
         params.priority
       );
-
     }
 
 
@@ -243,8 +241,7 @@ export class FreeworksApi {
 
   getProject(
     id: number
-  ):
-    Observable<Project> {
+  ): Observable<Project> {
 
     return this.http.get<Project>(
       `${this.apiUrl}/projects/${id}/`
@@ -255,8 +252,7 @@ export class FreeworksApi {
 
   createProject(
     project: ProjectPayload
-  ):
-    Observable<Project> {
+  ): Observable<Project> {
 
     return this.http.post<Project>(
       `${this.apiUrl}/projects/`,
@@ -269,8 +265,7 @@ export class FreeworksApi {
   updateProject(
     id: number,
     project: ProjectPayload
-  ):
-    Observable<Project> {
+  ): Observable<Project> {
 
     return this.http.put<Project>(
       `${this.apiUrl}/projects/${id}/`,
@@ -282,8 +277,7 @@ export class FreeworksApi {
 
   deleteProject(
     id: number
-  ):
-    Observable<void> {
+  ): Observable<void> {
 
     return this.http.delete<void>(
       `${this.apiUrl}/projects/${id}/`
@@ -292,12 +286,11 @@ export class FreeworksApi {
   }
 
 
-  // ==========================================
+  // =========================
   // ENTREGABLES
-  // ==========================================
+  // =========================
 
-  getDeliverables():
-    Observable<Deliverable[]> {
+  getDeliverables(): Observable<Deliverable[]> {
 
     return this.http.get<Deliverable[]>(
       `${this.apiUrl}/deliverables/`
@@ -306,10 +299,20 @@ export class FreeworksApi {
   }
 
 
+  getDeliverable(
+    id: number
+  ): Observable<Deliverable> {
+
+    return this.http.get<Deliverable>(
+      `${this.apiUrl}/deliverables/${id}/`
+    );
+
+  }
+
+
   getDeliverablesByProject(
     projectId: number
-  ):
-    Observable<Deliverable[]> {
+  ): Observable<Deliverable[]> {
 
     return this.http.get<Deliverable[]>(
       `${this.apiUrl}/deliverables/?project=${projectId}`
@@ -319,16 +322,8 @@ export class FreeworksApi {
 
 
   createDeliverable(
-    deliverable: {
-      project: number;
-      name: string;
-      description: string;
-      delivery_date: string;
-      simulated_file: string;
-      status: string;
-    }
-  ):
-    Observable<Deliverable> {
+    deliverable: DeliverablePayload
+  ): Observable<Deliverable> {
 
     return this.http.post<Deliverable>(
       `${this.apiUrl}/deliverables/`,
@@ -340,11 +335,10 @@ export class FreeworksApi {
 
   updateDeliverable(
     id: number,
-    deliverable: Partial<Deliverable>
-  ):
-    Observable<Deliverable> {
+    deliverable: DeliverablePayload
+  ): Observable<Deliverable> {
 
-    return this.http.patch<Deliverable>(
+    return this.http.put<Deliverable>(
       `${this.apiUrl}/deliverables/${id}/`,
       deliverable
     );
@@ -354,8 +348,7 @@ export class FreeworksApi {
 
   deleteDeliverable(
     id: number
-  ):
-    Observable<void> {
+  ): Observable<void> {
 
     return this.http.delete<void>(
       `${this.apiUrl}/deliverables/${id}/`
@@ -364,12 +357,11 @@ export class FreeworksApi {
   }
 
 
-  // ==========================================
+  // =========================
   // COMENTARIOS
-  // ==========================================
+  // =========================
 
-  getComments():
-    Observable<Comment[]> {
+  getComments(): Observable<Comment[]> {
 
     return this.http.get<Comment[]>(
       `${this.apiUrl}/comments/`
@@ -380,8 +372,7 @@ export class FreeworksApi {
 
   getCommentsByProject(
     projectId: number
-  ):
-    Observable<Comment[]> {
+  ): Observable<Comment[]> {
 
     return this.http.get<Comment[]>(
       `${this.apiUrl}/comments/?project=${projectId}`
@@ -396,8 +387,7 @@ export class FreeworksApi {
       client: number;
       message: string;
     }
-  ):
-    Observable<Comment> {
+  ): Observable<Comment> {
 
     return this.http.post<Comment>(
       `${this.apiUrl}/comments/`,
@@ -409,8 +399,7 @@ export class FreeworksApi {
 
   deleteComment(
     id: number
-  ):
-    Observable<void> {
+  ): Observable<void> {
 
     return this.http.delete<void>(
       `${this.apiUrl}/comments/${id}/`
@@ -419,9 +408,9 @@ export class FreeworksApi {
   }
 
 
-  // ==========================================
+  // =========================
   // NOTIFICACIONES
-  // ==========================================
+  // =========================
 
   getNotifications():
     Observable<NotificationResponse> {
