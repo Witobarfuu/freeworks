@@ -67,21 +67,27 @@
     </span>
 
 
-    <a class="nav-link">
+<a
+  routerLink="/alerts"
+  routerLinkActive="active"
+  class="nav-link"
+>
+  <span class="icon">!</span>
 
-      <span class="icon">
-        !
-      </span>
+  <span>
+    Alertas
+  </span>
 
-      <span>
-        Alertas
-      </span>
 
-      <span class="notification-count">
-        3
-      </span>
+  @if (alerts.count() > 0) {
 
-    </a>
+    <span class="notification-count">
+      {{ alerts.count() }}
+    </span>
+
+  }
+
+</a>
 
 
     <a class="nav-link">

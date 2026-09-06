@@ -14,6 +14,8 @@ import { DeliverableForm } from './features/deliverables/deliverable-form/delive
 import { ClientList } from './features/clients/client-list/client-list';
 import { ClientForm } from './features/clients/client-form/client-form';
 
+import { AlertList } from './features/alerts/alert-list/alert-list';
+
 
 export const routes: Routes = [
   {
@@ -80,6 +82,11 @@ export const routes: Routes = [
       {
         path: 'clients/:id/edit',
         component: ClientForm
+      },
+
+      {
+        path: 'alerts',
+        component: AlertList
       }
     ]
   },

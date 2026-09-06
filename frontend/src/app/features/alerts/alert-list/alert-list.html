@@ -1,0 +1,331 @@
+<section class="page-header">
+
+  <div>
+
+    <span class="eyebrow">
+      ALERTAS
+    </span>
+
+    <h1>
+      Requieren tu atención
+    </h1>
+
+    <p>
+      Revisa proyectos y entregables que
+      superaron su fecha límite.
+    </p>
+
+  </div>
+
+
+  <div class="alert-counter">
+
+    <span>
+      !
+    </span>
+
+    <div>
+
+      <strong>
+        {{ totalAlerts() }}
+      </strong>
+
+      <small>
+        alertas activas
+      </small>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+@if (error()) {
+
+  <div class="error-banner">
+
+    No fue posible cargar las alertas.
+
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <div class="loading-state">
+    Cargando alertas...
+  </div>
+
+}
+
+
+@if (!loading()) {
+
+  @if (totalAlerts() === 0) {
+
+    <section class="success-state">
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <h2>
+        Todo está bajo control
+      </h2>
+
+      <p>
+        No existen proyectos ni entregables
+        atrasados en este momento.
+      </p>
+
+    </section>
+
+  } @else {
+
+    <section class="summary-grid">
+
+      <article class="summary-card">
+
+        <span>
+          PROYECTOS ATRASADOS
+        </span>
+
+        <strong>
+          {{ overdueProjects().length }}
+        </strong>
+
+      </article>
+
+
+      <article class="summary-card">
+
+        <span>
+          ENTREGABLES ATRASADOS
+        </span>
+
+        <strong>
+          {{ overdueDeliverables().length }}
+        </strong>
+
+      </article>
+
+
+      <article class="summary-card danger">
+
+        <span>
+          TOTAL ALERTAS
+        </span>
+
+        <strong>
+          {{ totalAlerts() }}
+        </strong>
+
+      </article>
+
+    </section>
+
+
+    <section class="alerts-section">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">
+          PROYECTOS
+        </span>
+
+        <h2>
+          Proyectos atrasados
+        </h2>
+
+      </div>
+
+
+      <div class="alerts-grid">
+
+        @for (
+          project of overdueProjects();
+          track project.id
+        ) {
+
+          <article class="alert-card">
+
+            <div class="alert-icon">
+              !
+            </div>
+
+            <div class="alert-content">
+
+              <span class="alert-type">
+                PROYECTO ATRASADO
+              </span>
+
+              <h3>
+                {{ project.name }}
+              </h3>
+
+              <p>
+                {{ project.description }}
+              </p>
+
+
+              <div class="alert-meta">
+
+                <span>
+                  Cliente:
+                  <strong>
+                    {{
+                      project.client_company
+                      || project.client_name
+                    }}
+                  </strong>
+                </span>
+
+                <span>
+                  Fecha límite:
+                  <strong>
+                    {{ project.deadline }}
+                  </strong>
+                </span>
+
+                <span>
+                  Progreso:
+                  <strong>
+                    {{ project.calculated_progress }}%
+                  </strong>
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <a
+              [routerLink]="[
+                '/projects',
+                project.id
+              ]"
+              class="detail-btn"
+            >
+              Ver proyecto →
+            </a>
+
+          </article>
+
+        } @empty {
+
+          <div class="mini-empty">
+            No hay proyectos atrasados.
+          </div>
+
+        }
+
+      </div>
+
+    </section>
+
+
+    <section class="alerts-section">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">
+          ENTREGABLES
+        </span>
+
+        <h2>
+          Entregables atrasados
+        </h2>
+
+      </div>
+
+
+      <div class="alerts-grid">
+
+        @for (
+          deliverable of overdueDeliverables();
+          track deliverable.id
+        ) {
+
+          <article class="alert-card">
+
+            <div class="alert-icon">
+              !
+            </div>
+
+            <div class="alert-content">
+
+              <span class="alert-type">
+                ENTREGABLE ATRASADO
+              </span>
+
+              <h3>
+                {{ deliverable.name }}
+              </h3>
+
+              <p>
+                {{ deliverable.description }}
+              </p>
+
+
+              <div class="alert-meta">
+
+                <span>
+                  Proyecto:
+                  <strong>
+                    {{
+                      projectName(
+                        deliverable.project
+                      )
+                    }}
+                  </strong>
+                </span>
+
+                <span>
+                  Fecha:
+                  <strong>
+                    {{ deliverable.delivery_date }}
+                  </strong>
+                </span>
+
+                <span>
+                  Estado:
+                  <strong>
+                    Pendiente
+                  </strong>
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <a
+              [routerLink]="[
+                '/deliverables',
+                deliverable.id,
+                'edit'
+              ]"
+              class="detail-btn"
+            >
+              Revisar →
+            </a>
+
+          </article>
+
+        } @empty {
+
+          <div class="mini-empty">
+            No hay entregables atrasados.
+          </div>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+}
