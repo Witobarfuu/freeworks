@@ -1,0 +1,449 @@
+<section class="dashboard-header">
+
+  <div>
+    <span class="eyebrow">
+      RESUMEN GENERAL
+    </span>
+
+    <h1>
+      Tu trabajo, bajo control.
+    </h1>
+
+    <p>
+      Revisa el avance de tus proyectos, entregas y
+      compromisos desde un solo lugar.
+    </p>
+  </div>
+
+  <button class="new-project-btn">
+    <span>+</span>
+    Nuevo proyecto
+  </button>
+
+</section>
+
+
+@if (error()) {
+
+  <div class="alert-error">
+    <strong>No pudimos obtener toda la información.</strong>
+    <span>
+      Comprueba que el backend de FreeWorks esté activo.
+    </span>
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <section class="loading-panel">
+    <div class="spinner"></div>
+    <span>Cargando tu espacio de trabajo...</span>
+  </section>
+
+}
+
+
+@if (summary(); as s) {
+
+  <section class="stats-grid">
+
+    <article class="stat-card">
+
+      <div class="stat-icon purple">
+        ▦
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          Proyectos totales
+        </span>
+
+        <strong>
+          {{ s.total_projects }}
+        </strong>
+
+        <small>
+          Proyectos registrados
+        </small>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon blue">
+        ↗
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          En progreso
+        </span>
+
+        <strong>
+          {{ s.in_progress }}
+        </strong>
+
+        <small>
+          Actualmente activos
+        </small>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon green">
+        ✓
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          Finalizados
+        </span>
+
+        <strong>
+          {{ s.completed }}
+        </strong>
+
+        <small>
+          Trabajo completado
+        </small>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card danger">
+
+      <div class="stat-icon red">
+        !
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          Atrasados
+        </span>
+
+        <strong>
+          {{ s.late }}
+        </strong>
+
+        <small>
+          Requieren atención
+        </small>
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <section class="overview-grid">
+
+    <article class="panel progress-panel">
+
+      <div class="panel-header">
+
+        <div>
+          <span class="eyebrow">
+            RENDIMIENTO
+          </span>
+
+          <h2>
+            Progreso general
+          </h2>
+        </div>
+
+        <strong class="overall-number">
+          {{ s.overall_progress }}%
+        </strong>
+
+      </div>
+
+
+      <div class="main-progress">
+
+        <div
+          class="main-progress-value"
+          [style.width.%]="s.overall_progress">
+        </div>
+
+      </div>
+
+
+      <div class="progress-footer">
+
+        <div>
+          <strong>
+            {{ s.delivered }}
+          </strong>
+
+          <span>
+            entregables completados
+          </span>
+        </div>
+
+        <div>
+          <strong>
+            {{
+              s.total_deliverables -
+              s.delivered
+            }}
+          </strong>
+
+          <span>
+            pendientes
+          </span>
+        </div>
+
+        <div>
+          <strong>
+            {{ s.total_deliverables }}
+          </strong>
+
+          <span>
+            totales
+          </span>
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <article class="panel distribution-panel">
+
+      <span class="eyebrow">
+        DISTRIBUCIÓN
+      </span>
+
+      <h2>
+        Estado de proyectos
+      </h2>
+
+
+      <div class="status-row">
+
+        <div>
+          <i class="status-dot progress"></i>
+          <span>En progreso</span>
+        </div>
+
+        <strong>
+          {{ s.in_progress }}
+        </strong>
+
+      </div>
+
+
+      <div class="status-row">
+
+        <div>
+          <i class="status-dot completed"></i>
+          <span>Finalizados</span>
+        </div>
+
+        <strong>
+          {{ s.completed }}
+        </strong>
+
+      </div>
+
+
+      <div class="status-row">
+
+        <div>
+          <i class="status-dot pending"></i>
+          <span>Pendientes</span>
+        </div>
+
+        <strong>
+          {{ s.pending }}
+        </strong>
+
+      </div>
+
+
+      <div class="status-row">
+
+        <div>
+          <i class="status-dot late"></i>
+          <span>Atrasados</span>
+        </div>
+
+        <strong>
+          {{ s.late }}
+        </strong>
+
+      </div>
+
+    </article>
+
+  </section>
+
+}
+
+
+<section class="projects-section">
+
+  <div class="projects-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        PROYECTOS
+      </span>
+
+      <h2>
+        Actividad reciente
+      </h2>
+
+      <p>
+        Una vista rápida de tus proyectos más recientes.
+      </p>
+
+    </div>
+
+    <button class="view-all-btn">
+      Ver todos
+      <span>→</span>
+    </button>
+
+  </div>
+
+
+  <div class="project-grid">
+
+    @for (
+      project of projects();
+      track project.id
+    ) {
+
+      <article
+        class="project-card"
+        [class.overdue]="project.is_overdue">
+
+        <div class="project-top">
+
+          <div>
+
+            <span class="client-name">
+              {{ project.client_name }}
+            </span>
+
+            <h3>
+              {{ project.name }}
+            </h3>
+
+          </div>
+
+
+          <span
+            class="priority"
+            [class.high]="project.priority === 'high'"
+            [class.medium]="project.priority === 'medium'"
+            [class.low]="project.priority === 'low'">
+
+            {{ priorityLabel(project.priority) }}
+
+          </span>
+
+        </div>
+
+
+        <p class="project-description">
+          {{ project.description }}
+        </p>
+
+
+        <div class="progress-heading">
+
+          <span>
+            Progreso
+          </span>
+
+          <strong>
+            {{ project.calculated_progress }}%
+          </strong>
+
+        </div>
+
+
+        <div class="project-progress">
+
+          <div
+            class="project-progress-value"
+            [style.width.%]="project.calculated_progress">
+          </div>
+
+        </div>
+
+
+        <footer class="project-footer">
+
+          <span
+            class="project-status"
+            [class.late]="
+              project.current_status === 'late'
+            "
+            [class.completed]="
+              project.current_status === 'completed'
+            "
+            [class.pending]="
+              project.current_status === 'pending'
+            ">
+
+            {{ statusLabel(project.current_status) }}
+
+          </span>
+
+          <span class="deadline">
+            Entrega:
+            {{ project.deadline }}
+          </span>
+
+        </footer>
+
+      </article>
+
+    } @empty {
+
+      @if (!loading()) {
+
+        <div class="empty-projects">
+
+          <div class="empty-icon">
+            ◫
+          </div>
+
+          <h3>
+            Aún no hay proyectos
+          </h3>
+
+          <p>
+            Crea tu primer proyecto para comenzar a
+            trabajar con FreeWorks.
+          </p>
+
+        </div>
+
+      }
+
+    }
+
+  </div>
+
+</section>

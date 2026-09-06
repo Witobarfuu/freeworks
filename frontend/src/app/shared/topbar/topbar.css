@@ -1,0 +1,169 @@
+.topbar {
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 32px;
+
+  background:
+    rgba(255, 255, 255, .92);
+
+  border-bottom:
+    1px solid #eaecf0;
+
+  position: sticky;
+  top: 0;
+
+  z-index: 20;
+
+  backdrop-filter:
+    blur(12px);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #98a2b3;
+
+  font-size: 13px;
+}
+
+.breadcrumb strong {
+  color: #d0d5dd;
+}
+
+.breadcrumb .current {
+  color: #344054;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #667085;
+
+  font-size: 12px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+
+  background: #12b76a;
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(18, 183, 106, .12);
+}
+
+.notification-button {
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid #eaecf0;
+  border-radius: 11px;
+
+  background: white;
+
+  position: relative;
+
+  cursor: pointer;
+}
+
+.bell {
+  font-size: 20px;
+}
+
+.notification-dot {
+  position: absolute;
+
+  top: -5px;
+  right: -5px;
+
+  width: 20px;
+  height: 20px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #f04438;
+
+  color: white;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  border:
+    2px solid white;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7f56d9,
+      #6941c6
+    );
+
+  font-weight: 700;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info strong {
+  color: #101828;
+  font-size: 13px;
+}
+
+.user-info span {
+  color: #98a2b3;
+  font-size: 11px;
+}
+
+@media (max-width: 700px) {
+
+  .topbar {
+    padding:
+      0 16px;
+  }
+
+  .status,
+  .user-info {
+    display: none;
+  }
+}
