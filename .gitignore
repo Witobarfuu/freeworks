@@ -1,0 +1,23 @@
+#Angular 
+node_modules/
+dist/
+.angular/
+
+#Django / Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+venv/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
