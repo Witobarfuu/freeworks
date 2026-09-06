@@ -10,9 +10,12 @@ import {
 } from '@angular/common';
 
 import {
+  FormsModule
+} from '@angular/forms';
+
+import {
   ActivatedRoute,
-  Router,
-  RouterLink
+  Router
 } from '@angular/router';
 
 import {
@@ -26,7 +29,7 @@ import {
 
   imports: [
     CommonModule,
-    RouterLink
+    FormsModule
   ],
 
   templateUrl: './project-detail.html',
@@ -53,6 +56,14 @@ export class ProjectDetail implements OnInit {
   error =
     signal('');
 
+  savingComment =
+    signal(false);
+
+  commentError =
+    signal('');
+
+  commentMessage = '';
+
 
   ngOnInit(): void {
 
@@ -60,7 +71,6 @@ export class ProjectDetail implements OnInit {
       Number(
         this.route.snapshot.paramMap.get('id')
       );
-
 
     if (!id) {
 
@@ -73,7 +83,6 @@ export class ProjectDetail implements OnInit {
       return;
 
     }
-
 
     this.loadProject(id);
 
@@ -92,11 +101,6 @@ export class ProjectDetail implements OnInit {
     this.api.getProject(id).subscribe({
 
       next: (project) => {
-
-        console.log(
-          'DETALLE PROYECTO:',
-          project
-        );
 
         this.project.set(project);
 
@@ -117,6 +121,95 @@ export class ProjectDetail implements OnInit {
         );
 
         this.loading.set(false);
+
+      }
+
+    });
+
+  }
+
+
+  addComment(): void {
+
+    this.commentError.set('');
+
+
+    const project =
+      this.project();
+
+
+    if (!project) {
+      return;
+    }
+
+
+    const message =
+      this.commentMessage.trim();
+
+
+    if (!message) {
+
+      this.commentError.set(
+        'Escribe un comentario antes de guardar.'
+      );
+
+      return;
+
+    }
+
+
+    if (message.length < 3) {
+
+      this.commentError.set(
+        'El comentario debe tener al menos 3 caracteres.'
+      );
+
+      return;
+
+    }
+
+
+    this.savingComment.set(true);
+
+
+    this.api.createComment({
+
+      project:
+        project.id,
+
+      client:
+        project.client,
+
+      message:
+        message
+
+    }).subscribe({
+
+      next: () => {
+
+        this.commentMessage = '';
+
+        this.savingComment.set(false);
+
+        this.loadProject(
+          project.id
+        );
+
+      },
+
+
+      error: (error) => {
+
+        console.error(
+          'ERROR COMENTARIO:',
+          error
+        );
+
+        this.commentError.set(
+          'No fue posible guardar el comentario.'
+        );
+
+        this.savingComment.set(false);
 
       }
 
