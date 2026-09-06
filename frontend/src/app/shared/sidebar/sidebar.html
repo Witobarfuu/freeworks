@@ -51,17 +51,15 @@
     </a>
 
 
-    <a class="nav-link">
-
-      <span class="icon">
-        ◉
-      </span>
-
-      <span>
-        Clientes
-      </span>
-
-    </a>
+ <a
+  routerLink="/clients"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: false }"
+  class="nav-link"
+>
+  <span class="icon">◉</span>
+  <span>Clientes</span>
+</a>
 
 
     <span class="section-title management">

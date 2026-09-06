@@ -1,0 +1,209 @@
+<section class="page-header">
+
+  <a
+    routerLink="/clients"
+    class="back-link"
+  >
+    ← Volver a clientes
+  </a>
+
+  <span class="eyebrow">
+
+    {{
+      isEditMode
+        ? 'EDITAR CLIENTE'
+        : 'NUEVO CLIENTE'
+    }}
+
+  </span>
+
+  <h1>
+
+    {{
+      isEditMode
+        ? 'Actualizar cliente'
+        : 'Registrar nuevo cliente'
+    }}
+
+  </h1>
+
+  <p>
+    Mantén organizada la información básica
+    de tus clientes.
+  </p>
+
+</section>
+
+
+@if (errorMessage()) {
+
+  <div class="error-message">
+
+    <strong>
+      Revisa la información
+    </strong>
+
+    <span>
+      {{ errorMessage() }}
+    </span>
+
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <div class="loading-state">
+    Cargando cliente...
+  </div>
+
+}
+
+
+@if (!loading()) {
+
+  <form
+    class="client-form"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+  >
+
+    <section class="form-card">
+
+      <div class="card-heading">
+
+        <span class="step">
+          01
+        </span>
+
+        <div>
+
+          <h2>
+            Información del cliente
+          </h2>
+
+          <p>
+            Datos que utilizará FreeWorks
+            en proyectos y comentarios.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>
+            Nombre *
+          </label>
+
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Ej: Camila Rojas"
+            [class.invalid]="fieldInvalid('name')"
+          >
+
+          @if (fieldInvalid('name')) {
+
+            <small>
+              Ingresa un nombre válido.
+            </small>
+
+          }
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Empresa *
+          </label>
+
+          <input
+            type="text"
+            formControlName="company"
+            placeholder="Ej: TechStore"
+            [class.invalid]="fieldInvalid('company')"
+          >
+
+          @if (fieldInvalid('company')) {
+
+            <small>
+              Ingresa el nombre de la empresa.
+            </small>
+
+          }
+
+        </div>
+
+
+        <div class="field full">
+
+          <label>
+            Correo electrónico *
+          </label>
+
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="cliente@empresa.cl"
+            [class.invalid]="fieldInvalid('email')"
+          >
+
+          @if (fieldInvalid('email')) {
+
+            <small>
+              Ingresa un correo válido.
+            </small>
+
+          }
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="form-actions">
+
+      <a
+        routerLink="/clients"
+        class="cancel-btn"
+      >
+        Cancelar
+      </a>
+
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="saving()"
+      >
+
+        @if (saving()) {
+
+          Guardando...
+
+        } @else {
+
+          {{
+            isEditMode
+              ? 'Guardar cambios'
+              : 'Crear cliente'
+          }}
+
+        }
+
+      </button>
+
+    </div>
+
+  </form>
+
+}

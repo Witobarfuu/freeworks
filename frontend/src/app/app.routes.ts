@@ -11,15 +11,16 @@ import { ProjectDetail } from './features/projects/project-detail/project-detail
 import { DeliverableList } from './features/deliverables/deliverable-list/deliverable-list';
 import { DeliverableForm } from './features/deliverables/deliverable-form/deliverable-form';
 
+import { ClientList } from './features/clients/client-list/client-list';
+import { ClientForm } from './features/clients/client-form/client-form';
+
 
 export const routes: Routes = [
-
   {
     path: '',
     component: MainLayout,
 
     children: [
-
       {
         path: '',
         redirectTo: 'dashboard',
@@ -30,9 +31,6 @@ export const routes: Routes = [
         path: 'dashboard',
         component: Dashboard
       },
-
-
-      // PROYECTOS
 
       {
         path: 'projects',
@@ -54,9 +52,6 @@ export const routes: Routes = [
         component: ProjectDetail
       },
 
-
-      // ENTREGABLES
-
       {
         path: 'deliverables',
         component: DeliverableList
@@ -70,15 +65,27 @@ export const routes: Routes = [
       {
         path: 'deliverables/:id/edit',
         component: DeliverableForm
-      }
+      },
 
+      {
+        path: 'clients',
+        component: ClientList
+      },
+
+      {
+        path: 'clients/new',
+        component: ClientForm
+      },
+
+      {
+        path: 'clients/:id/edit',
+        component: ClientForm
+      }
     ]
   },
-
 
   {
     path: '**',
     redirectTo: 'dashboard'
   }
-
 ];

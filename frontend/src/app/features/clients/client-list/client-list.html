@@ -1,0 +1,191 @@
+<section class="page-header">
+
+  <div>
+
+    <span class="eyebrow">
+      GESTIÓN DE CLIENTES
+    </span>
+
+    <h1>
+      Tus clientes
+    </h1>
+
+    <p>
+      Consulta clientes y revisa rápidamente
+      sus proyectos asociados.
+    </p>
+
+  </div>
+
+  <a
+    routerLink="/clients/new"
+    class="new-btn"
+  >
+    <span>+</span>
+    Nuevo cliente
+  </a>
+
+</section>
+
+
+<section class="search-panel">
+
+  <div class="search-box">
+
+    <span>
+      ⌕
+    </span>
+
+    <input
+      type="text"
+      [(ngModel)]="search"
+      (input)="loadClients()"
+      placeholder="Buscar por nombre, empresa o correo..."
+    >
+
+    @if (search) {
+
+      <button
+        type="button"
+        (click)="clearSearch()"
+      >
+        ×
+      </button>
+
+    }
+
+  </div>
+
+</section>
+
+
+@if (error()) {
+
+  <div class="error-banner">
+    No fue posible cargar los clientes.
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <div class="loading-state">
+    Cargando clientes...
+  </div>
+
+}
+
+
+@if (!loading()) {
+
+  <section class="clients-grid">
+
+    @for (
+      client of clients();
+      track client.id
+    ) {
+
+      <article class="client-card">
+
+        <div class="client-top">
+
+          <div class="avatar">
+
+            {{
+              client.name
+                .charAt(0)
+                .toUpperCase()
+            }}
+
+          </div>
+
+          <div class="client-main">
+
+            <span class="company">
+              {{
+                client.company
+                || 'Cliente independiente'
+              }}
+            </span>
+
+            <h2>
+              {{ client.name }}
+            </h2>
+
+            <a
+              class="email"
+              [href]="'mailto:' + client.email"
+            >
+              {{ client.email }}
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="client-stats">
+
+          <div>
+
+            <span>
+              Proyectos
+            </span>
+
+            <strong>
+              {{ projectCount(client.id) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="actions">
+
+          <a
+            [routerLink]="[
+              '/clients',
+              client.id,
+              'edit'
+            ]"
+            class="edit-btn"
+          >
+            Editar
+          </a>
+
+        </div>
+
+      </article>
+
+    } @empty {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ◉
+        </div>
+
+        <h3>
+          No encontramos clientes
+        </h3>
+
+        <p>
+          Crea un cliente o modifica tu búsqueda.
+        </p>
+
+        <a
+          routerLink="/clients/new"
+          class="empty-btn"
+        >
+          + Crear cliente
+        </a>
+
+      </div>
+
+    }
+
+  </section>
+
+}
