@@ -116,5 +116,44 @@ export class FreeworksApi {
       `${this.apiUrl}/notifications/`
     );
   }
+getClients(): Observable<Client[]> {
+  return this.http.get<Client[]>(
+    `${this.apiUrl}/clients/`
+  );
+}
 
+getProjectsFiltered(params: {
+  search?: string;
+  client?: string;
+  status?: string;
+  priority?: string;
+}): Observable<Project[] | ProjectResponse> {
+
+  const query = new URLSearchParams();
+
+  if (params.search) {
+    query.set('search', params.search);
+  }
+
+  if (params.client) {
+    query.set('client', params.client);
+  }
+
+  if (params.status) {
+    query.set('status', params.status);
+  }
+
+  if (params.priority) {
+    query.set('priority', params.priority);
+  }
+
+  const suffix =
+    query.toString()
+      ? `?${query.toString()}`
+      : '';
+
+  return this.http.get<Project[] | ProjectResponse>(
+    `${this.apiUrl}/projects/${suffix}`
+  );
+}
 }

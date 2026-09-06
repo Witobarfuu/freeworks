@@ -1,0 +1,288 @@
+<section class="page-header">
+
+  <div>
+    <span class="eyebrow">
+      GESTIÓN DE PROYECTOS
+    </span>
+
+    <h1>
+      Tus proyectos
+    </h1>
+
+    <p>
+      Organiza, filtra y supervisa todos tus trabajos
+      desde un solo lugar.
+    </p>
+  </div>
+
+  <button class="new-project-btn">
+    <span>+</span>
+    Nuevo proyecto
+  </button>
+
+</section>
+
+
+<section class="filters-panel">
+
+  <div class="search-box">
+
+    <span>⌕</span>
+
+    <input
+      type="text"
+      [(ngModel)]="search"
+      (input)="loadProjects()"
+      placeholder="Buscar proyecto o entregable..."
+    >
+
+  </div>
+
+
+  <div class="filters-grid">
+
+    <select
+      [(ngModel)]="selectedClient"
+      (change)="loadProjects()">
+
+      <option value="">
+        Todos los clientes
+      </option>
+
+      @for (
+        client of clients();
+        track client.id
+      ) {
+
+        <option [value]="client.id">
+          {{ client.company || client.name }}
+        </option>
+
+      }
+
+    </select>
+
+
+    <select
+      [(ngModel)]="selectedStatus"
+      (change)="loadProjects()">
+
+      <option value="">
+        Todos los estados
+      </option>
+
+      <option value="pending">
+        Pendiente
+      </option>
+
+      <option value="progress">
+        En progreso
+      </option>
+
+      <option value="completed">
+        Finalizado
+      </option>
+
+      <option value="late">
+        Atrasado
+      </option>
+
+    </select>
+
+
+    <select
+      [(ngModel)]="selectedPriority"
+      (change)="loadProjects()">
+
+      <option value="">
+        Todas las prioridades
+      </option>
+
+      <option value="high">
+        Alta
+      </option>
+
+      <option value="medium">
+        Media
+      </option>
+
+      <option value="low">
+        Baja
+      </option>
+
+    </select>
+
+
+    <button
+      class="clear-btn"
+      (click)="clearFilters()">
+
+      Limpiar filtros
+
+    </button>
+
+  </div>
+
+</section>
+
+
+@if (error()) {
+
+  <div class="error-banner">
+    No fue posible cargar los proyectos.
+  </div>
+
+}
+
+
+@if (loading()) {
+
+  <div class="loading">
+    Cargando proyectos...
+  </div>
+
+}
+
+
+<section class="projects-grid">
+
+  @for (
+    project of projects();
+    track project.id
+  ) {
+
+    <article
+      class="project-card"
+      [class.overdue]="project.is_overdue">
+
+      <div class="project-top">
+
+        <div>
+
+          <span class="client-name">
+            {{ project.client_name }}
+          </span>
+
+          <h2>
+            {{ project.name }}
+          </h2>
+
+        </div>
+
+        <span
+          class="priority"
+          [class.high]="project.priority === 'high'"
+          [class.medium]="project.priority === 'medium'"
+          [class.low]="project.priority === 'low'">
+
+          {{ priorityLabel(project.priority) }}
+
+        </span>
+
+      </div>
+
+
+      <p class="description">
+        {{ project.description }}
+      </p>
+
+
+      <div class="progress-heading">
+
+        <span>
+          Progreso
+        </span>
+
+        <strong>
+          {{ project.calculated_progress }}%
+        </strong>
+
+      </div>
+
+
+      <div class="progress-track">
+
+        <div
+          class="progress-value"
+          [style.width.%]="project.calculated_progress">
+        </div>
+
+      </div>
+
+
+      <div class="project-meta">
+
+        <div>
+
+          <span class="meta-label">
+            Estado
+          </span>
+
+          <span
+            class="status"
+            [class.late]="project.current_status === 'late'"
+            [class.completed]="project.current_status === 'completed'"
+            [class.pending]="project.current_status === 'pending'">
+
+            {{ statusLabel(project.current_status) }}
+
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <span class="meta-label">
+            Fecha límite
+          </span>
+
+          <strong>
+            {{ project.deadline }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="project-actions">
+
+        <button class="secondary-btn">
+          Editar
+        </button>
+
+        <button class="detail-btn">
+          Ver detalle →
+        </button>
+
+      </div>
+
+    </article>
+
+  } @empty {
+
+    @if (!loading()) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          ▤
+        </div>
+
+        <h3>
+          No encontramos proyectos
+        </h3>
+
+        <p>
+          Prueba cambiando los filtros o crea
+          un nuevo proyecto.
+        </p>
+
+      </div>
+
+    }
+
+  }
+
+</section>
