@@ -1,0 +1,55 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: freeworks-backend
+
+    working_dir: /app
+
+    command:
+      - python
+      - manage.py
+      - runserver
+      - 0.0.0.0:8000
+
+    volumes:
+      - ./backend:/app
+
+    ports:
+      - "8000:8000"
+
+    restart: unless-stopped
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    container_name: freeworks-frontend
+
+    working_dir: /app
+
+    command:
+      - npm
+      - start
+      - --
+      - --host
+      - 0.0.0.0
+      - --proxy-config
+      - proxy.conf.json
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+    ports:
+      - "4200:4200"
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped

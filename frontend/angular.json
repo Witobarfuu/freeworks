@@ -1,10 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "cli": {
-    "packageManager": "npm",
-    "analytics": "252d1b8e-ff80-44d5-a82a-285c14556488"
-  },
   "newProjectRoot": "projects",
   "projects": {
     "frontend": {
@@ -13,11 +9,15 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+
       "architect": {
+
         "build": {
           "builder": "@angular/build:application",
+
           "options": {
             "browser": "src/main.ts",
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -26,18 +26,26 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/styles.scss"
             ],
+
             "server": "src/main.server.ts",
             "outputMode": "server",
-            "security": {
-              "allowedHosts": []
-            },
             "ssr": {
               "entry": "src/server.ts"
+            },
+
+            "security": {
+              "allowedHosts": [
+                "localhost",
+                "127.0.0.1"
+              ]
             }
           },
+
           "configurations": {
+
             "production": {
               "budgets": [
                 {
@@ -53,30 +61,58 @@
               ],
               "outputHashing": "all"
             },
+
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
             }
+
           },
+
           "defaultConfiguration": "production"
         },
+
+
         "serve": {
           "builder": "@angular/build:dev-server",
+
+          "options": {
+            "allowedHosts": [
+              "localhost",
+              "127.0.0.1"
+            ]
+          },
+
           "configurations": {
+
             "production": {
               "buildTarget": "frontend:build:production"
             },
+
             "development": {
               "buildTarget": "frontend:build:development"
             }
+
           },
+
           "defaultConfiguration": "development"
         },
+
+
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+
+
         "test": {
           "builder": "@angular/build:unit-test"
         }
+
       }
+
     }
+
   }
+
 }
