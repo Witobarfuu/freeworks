@@ -1,0 +1,407 @@
+<section class="page-header">
+
+  <div>
+
+    <span class="eyebrow">
+      PREFERENCIAS
+    </span>
+
+    <h1>
+      Configura tu espacio
+    </h1>
+
+    <p>
+      Personaliza tu perfil y el comportamiento
+      general de FreeWorks.
+    </p>
+
+  </div>
+
+</section>
+
+
+@if (saved()) {
+
+  <div class="success-message">
+
+    <span>✓</span>
+
+    <div>
+
+      <strong>
+        Preferencias guardadas
+      </strong>
+
+      <p>
+        Los cambios quedaron almacenados
+        correctamente.
+      </p>
+
+    </div>
+
+  </div>
+
+}
+
+
+<div class="preferences-grid">
+
+
+  <section class="settings-card">
+
+    <div class="card-heading">
+
+      <span class="card-icon">
+        W
+      </span>
+
+      <div>
+
+        <h2>
+          Perfil del freelancer
+        </h2>
+
+        <p>
+          Información mostrada dentro
+          del panel.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label for="freelancerName">
+          Nombre
+        </label>
+
+        <input
+          id="freelancerName"
+          type="text"
+          [(ngModel)]="freelancerName"
+          placeholder="Nombre del freelancer"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="freelancerRole">
+          Rol
+        </label>
+
+        <input
+          id="freelancerRole"
+          type="text"
+          [(ngModel)]="freelancerRole"
+          placeholder="Freelancer"
+        >
+
+      </div>
+
+
+      <div class="field full">
+
+        <label for="email">
+          Correo electrónico
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          placeholder="correo@ejemplo.cl"
+        >
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="settings-card">
+
+    <div class="card-heading">
+
+      <span class="card-icon">
+        !
+      </span>
+
+      <div>
+
+        <h2>
+          Notificaciones
+        </h2>
+
+        <p>
+          Define qué avisos deseas recibir.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="option-list">
+
+      <label class="option-row">
+
+        <div>
+
+          <strong>
+            Alertas por entregas atrasadas
+          </strong>
+
+          <span>
+            Recibir avisos cuando una entrega
+            supere su fecha límite.
+          </span>
+
+        </div>
+
+
+        <input
+          type="checkbox"
+          [(ngModel)]="overdueNotifications"
+        >
+
+      </label>
+
+
+      <label class="option-row">
+
+        <div>
+
+          <strong>
+            Notificaciones por correo
+          </strong>
+
+          <span>
+            Mantener habilitados avisos
+            simulados por correo.
+          </span>
+
+        </div>
+
+
+        <input
+          type="checkbox"
+          [(ngModel)]="emailNotifications"
+        >
+
+      </label>
+
+    </div>
+
+  </section>
+
+
+  <section class="settings-card">
+
+    <div class="card-heading">
+
+      <span class="card-icon">
+        ⚙
+      </span>
+
+      <div>
+
+        <h2>
+          Interfaz
+        </h2>
+
+        <p>
+          Ajustes de visualización del panel.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="option-list">
+
+      <label class="option-row">
+
+        <div>
+
+          <strong>
+            Mostrar estado del sistema
+          </strong>
+
+          <span>
+            Mantener visible el indicador
+            “Sistema operativo”.
+          </span>
+
+        </div>
+
+
+        <input
+          type="checkbox"
+          [(ngModel)]="showSystemStatus"
+        >
+
+      </label>
+
+
+      <label class="option-row">
+
+        <div>
+
+          <strong>
+            Modo compacto
+          </strong>
+
+          <span>
+            Reducir visualmente el espacio
+            utilizado por los componentes.
+          </span>
+
+        </div>
+
+
+        <input
+          type="checkbox"
+          [(ngModel)]="compactMode"
+        >
+
+      </label>
+
+    </div>
+
+  </section>
+
+
+  <section class="settings-card about-card">
+
+    <div class="card-heading">
+
+      <span class="card-icon">
+        FW
+      </span>
+
+      <div>
+
+        <h2>
+          Acerca de FreeWorks
+        </h2>
+
+        <p>
+          MVP para gestión de proyectos freelance.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="about-content">
+
+      <div class="about-row">
+
+        <span>
+          Frontend
+        </span>
+
+        <strong>
+          Angular
+        </strong>
+
+      </div>
+
+
+      <div class="about-row">
+
+        <span>
+          Backend
+        </span>
+
+        <strong>
+          Django REST Framework
+        </strong>
+
+      </div>
+
+
+      <div class="about-row">
+
+        <span>
+          Control de versiones
+        </span>
+
+        <strong>
+          Git + GitHub
+        </strong>
+
+      </div>
+
+
+      <div class="about-row">
+
+        <span>
+          Arquitectura
+        </span>
+
+        <strong>
+          SPA + API REST
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="teacher-message">
+
+      <span>
+        🚀
+      </span>
+
+      <div>
+
+        <strong>
+          Gracias por todo, profesor.
+        </strong>
+
+        <p>
+          FreeWorks representa el cierre de un proceso
+          de aprendizaje y la aplicación práctica
+          de los contenidos vistos durante el curso.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<div class="actions">
+
+  <button
+    type="button"
+    class="secondary-btn"
+    (click)="restoreDefaults()"
+  >
+    Restaurar valores
+  </button>
+
+
+  <button
+    type="button"
+    class="primary-btn"
+    (click)="savePreferences()"
+  >
+    Guardar preferencias
+  </button>
+
+</div>

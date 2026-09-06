@@ -16,6 +16,8 @@ import { ClientForm } from './features/clients/client-form/client-form';
 
 import { AlertList } from './features/alerts/alert-list/alert-list';
 
+import { Preferences } from './features/preferences/preferences/preferences';
+
 
 export const routes: Routes = [
   {
@@ -87,6 +89,11 @@ export const routes: Routes = [
       {
         path: 'alerts',
         component: AlertList
+      },
+
+      {
+        path: 'preferences',
+        component: Preferences
       }
     ]
   },
